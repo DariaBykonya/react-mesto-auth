@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate, Link } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Login from './Login/Login.jsx';
 import Register from './Register/Register.jsx';
 import ProtectedRoute from './ProtectedRoute.js';
@@ -25,7 +25,7 @@ function App() {
   const handleLoggedIn = () => {
     setLoggedIn(true);
   };
-  const [isInfoTooltipSucceed, setIsInfoTooltipSucceed] = useState({
+  const [infoTooltipSucceed, setInfoTooltipSucceed] = useState({
     isOpen: false,
     isSucceed: false,
   });
@@ -99,8 +99,8 @@ function App() {
     setIsAddPlacePopupOpen(false)
     setImagePopupOpen(false)
     setIsConfirmDeletePopupOpen(false)
-    setIsInfoTooltipSucceed({
-      ...isInfoTooltipSucceed,
+    setInfoTooltipSucceed({
+      ...infoTooltipSucceed,
       isOpen: false,
     });
   }
@@ -185,7 +185,7 @@ function App() {
         .then((res) => {
           if (res) {
             navigate("/signin");
-            setIsInfoTooltipSucceed({
+            setInfoTooltipSucceed({
               isOpen: true,
               isSucceed: true,
             });
@@ -193,7 +193,7 @@ function App() {
         })
         .catch((err) => {
           console.log(`Ошибка регистрации ${err}`);
-          setIsInfoTooltipSucceed({
+          setInfoTooltipSucceed({
             isOpen: true,
             isSucceed: false,
           });
@@ -211,7 +211,7 @@ function App() {
         })
         .catch((err) => {
           console.log(`Ошибка авторизации ${err}`);
-          setIsInfoTooltipSucceed({
+          setInfoTooltipSucceed({
             isOpen: true,
             isSucceed: false,
           });
@@ -254,23 +254,23 @@ function App() {
         closeAllPopups();
       }
     };
-    if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || isImagePopupOpen || isConfirmDeletePopupOpen || isInfoTooltipSucceed) {
+    if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || isImagePopupOpen || isConfirmDeletePopupOpen || infoTooltipSucceed) {
       document.addEventListener('keydown', closePopupEsc);
     }
     return () => {
       document.removeEventListener('keydown', closePopupEsc);
     };
-  }, [isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isImagePopupOpen, isConfirmDeletePopupOpen, isInfoTooltipSucceed]);
+  }, [isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isImagePopupOpen, isConfirmDeletePopupOpen, infoTooltipSucceed]);
 
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-          <Routes>
+          <Header loggedIn={loggedIn} email={userEmail} onSignOut={signOut} />
+            <Routes>
             <Route
               path="/"
               element={
                 <ProtectedRoute loggedIn={loggedIn}>
-                    <Header loggedIn={loggedIn} email={userEmail} onSignOut={signOut} />
                     <Main
                       onEditAvatar={handleEditAvatarClick}
                       onEditProfile={handleEditProfileClick}
@@ -287,35 +287,21 @@ function App() {
             <Route
               path="/signin"
               element={
-                <>
-                  <Header>
-                    <Link className="header__navigate-title" to="/signup">
-                      Регистрация
-                    </Link>
-                  </Header>
-                  <Login onLogin={handleLogin} />
-                </>
+                <Login onLogin={handleLogin} />
               }
             />
             <Route
               path="/signup"
               element={
-                <>
-                  <Header>
-                    <Link className="header__navigate-title" to="/signin">
-                      Войти
-                    </Link>
-                  </Header>
-                  <Register onRegister={handleRegister} />
-                </>
+                <Register onRegister={handleRegister} />
               }
             />
           </Routes>
 
         <InfoTooltip
           onClose={closeAllPopups}
-          isOpen={isInfoTooltipSucceed.isOpen}
-          isSucceed={isInfoTooltipSucceed.isSucceed}
+          isOpen={infoTooltipSucceed.isOpen}
+          isSucceed={infoTooltipSucceed.isSucceed}
         />
 
         <EditProfilePopup

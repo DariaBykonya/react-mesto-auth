@@ -1,7 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../images/logo.svg';
 
-function Header({ loggedIn, email, onSignOut, children }) {
+function Header({ loggedIn, email, onSignOut }) {
+
+    const location = useLocation();
+
     return (
         <header className="page-content header">
             {loggedIn ? (
@@ -29,7 +32,16 @@ function Header({ loggedIn, email, onSignOut, children }) {
                     alt="Логотип Место"
                 />
                 </a>
-                {children}
+                {location.pathname === "/signup" ? (
+                    <div className="header__group">
+                        <Link className="header__navigate-title" to="signin">Войти</Link>
+                    </div>
+                     ) : null}
+                {location.pathname === "/signin" ? (
+                    <div className="header__group">
+                        <Link className="header__navigate-title" to="signup">Регистрация</Link>
+                    </div>
+                    ) : null}
             </>
 )}
             
