@@ -2,12 +2,14 @@ import { useContext } from "react";
 import Card from "./Card.jsx";
 import currentUserContext from "../contexts/CurrentUserContext.js";
 import RenderLoading from "./RenderLoading/RenderLoading.jsx";
+import Footer from "./Footer.jsx";
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onDelete, cards, isLoading, onCardLike }) {
 
   const currentUser = useContext(currentUserContext)
 
     return (
+      <>
         <main>
         <section className="page-content profile">
           <div className="profile__full-info">
@@ -41,6 +43,8 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onDelete, 
           })}
         </section>
       </main>
+      <Footer />
+      </>
   )};
   
   export default Main

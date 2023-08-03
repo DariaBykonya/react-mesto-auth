@@ -1,77 +1,31 @@
-import { Link, useNavigate } from "react-router-dom";
-import Header from "../Header.jsx";
-import InfoTooltip from "../InfoTooltip/InfoTooltip.jsx";
-import passed from '../../images/passed.svg'
-import failed from '../../images/failed.svg'
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 
-function Register ({ onRegister }) {
-    
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState ('')
-
-    const [passedPopupOpen, setPassedPopupOpen] = useState(false)
-    const [failedPopupOpen, setFailedPopupOpen] = useState(false)
+const Register = ({ onRegister }) => {
 
 
-    const navigate = useNavigate();
 
-    function handlePassedPopupOpen() {
-        setPassedPopupOpen(true)
+  const [data, setData] = useState({
+    password: "",
+    email: "",
+  });
+
+  const handleChange = (evt) => {
+    const { name, value } = evt.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
   };
-    function handleFailedPopupOpen() {
-    setFailedPopupOpen(true)
-};
 
-  
-  function closePopup() {
-    setPassedPopupOpen(false)
-    setFailedPopupOpen(false)
-  }
-  
-  useEffect(() => {
-    const closePopupEsc = e => {
-      if (e.key === 'Escape') {
-        closePopup();
-      }
-    };
-    if (passedPopupOpen || failedPopupOpen) {
-      document.addEventListener('keydown', closePopupEsc);
-    }
-    return () => {
-      document.removeEventListener('keydown', closePopupEsc);
-    };
-  }, [passedPopupOpen, failedPopupOpen]);
-
-
-  
-  function handleSubmit (e) {
-    e.preventDefault()
-    onRegister({ email, password })
-        .then((res) => {
-            console.log(res)
-          setEmail("");
-          setPassword("");
-          handlePassedPopupOpen()
-          navigate('/signin')
-        //   if (res.status === 400 || res.status === 401) {
-        //     handleFailedPopupOpen();
-        //   } else {
-        //     handlePassedPopupOpen();
-        //   }
-      }).catch((err) => {
-        handleFailedPopupOpen()
-        console.log(`Error register ${err}`)
-      })
-  }
-
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    onRegister(data.password, data.email);
+  };
+    
   return (
       <div className="sign">
-        <Header 
-            link='/signin'
-            titleNavigate="Войти"
-        />
         <div className="sign__body">
             <h1 className="sign__title">Регистрация</h1>
           <form
@@ -84,9 +38,10 @@ function Register ({ onRegister }) {
             placeholder="Email"
             id="emailAddress"
             className="sign__input sign__input_type_emailAddress"
-            value={email}
-            onChange={({target: { value }}) => setEmail(value)}
-            minLength='5'
+            value={data.email}
+            onChange={(e) => {
+              handleChange(e);
+            }}
             required
           />
           <span
@@ -100,8 +55,10 @@ function Register ({ onRegister }) {
             placeholder="Пароль"
             className="sign__input sign__input_type_pass"
             required
-            value={password}
-            onChange={({target: { value }}) => setPassword(value)}
+            value={data.password}
+            onChange={(e) => {
+              handleChange(e);
+            }}
           />
           <span
             className="sign__input-error sign__input-error_type_pass"
@@ -113,7 +70,7 @@ function Register ({ onRegister }) {
           <p className="sign-up__subtitle">Уже зарегистрированы? <Link to="/signin" className="sign-up__link-navigate">Войти</Link>
             </p>
         </div>
-        <InfoTooltip
+        {/* <InfoTooltip
           linkImage={passed}
           altImage='Попробуй ещё раз'
           subtitle='Вы успешно зарегистрировались!'
@@ -126,7 +83,7 @@ function Register ({ onRegister }) {
           subtitle='Что-то пошло не так! Попробуйте ещё раз.'
           onClose={closePopup}
           isOpen={failedPopupOpen}
-        />
+        /> */}
       </div>
     );
 
